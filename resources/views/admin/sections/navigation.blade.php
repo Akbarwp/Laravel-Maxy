@@ -45,8 +45,14 @@
                     </li>
                     <li>
                         <a href="{{ route('admin.purchase.order.lines') }}">
-                            <i class="fa fa-users" aria-hidden="true"></i>
+                            <i class="fa fa-shopping-basket" aria-hidden="true"></i>
                             {{ __('views.backend.section.navigation.menu_4_2') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.orders') }}">
+                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                            {{ __('views.backend.section.navigation.menu_4_3') }}
                         </a>
                     </li>
                 </ul>

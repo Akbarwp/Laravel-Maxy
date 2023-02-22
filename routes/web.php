@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\Admin\PurhcaseOrderController;
 
 /*
@@ -76,16 +77,25 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::put('products/{id}', [PurhcaseOrderController::class, 'getProductUpdate'])->name('products.update');
     Route::any('products/{id}/destroy', [PurhcaseOrderController::class, 'getProductDestroy'])->name('products.destroy');
 
-
-    Route::get('purchase-order-lines', [PurhcaseOrderController::class, 'getPurchaseOrderLineList'])->name('purchase.order.lines');
     
     // Purchase Order Lines
+    Route::get('purchase-order-lines', [PurhcaseOrderController::class, 'getPurchaseOrderLineList'])->name('purchase.order.lines');
     Route::get('purchase-order-lines/create', [PurhcaseOrderController::class, 'getPurchaseOrderLineCreate'])->name('purchase.order.lines.create');
     Route::post('purchase-order-lines/create', [PurhcaseOrderController::class, 'postPurchaseOrderLineInsert'])->name('purchase.order.lines.insert');
     Route::get('purchase-order-lines/{purchaseOrderLine}', [PurhcaseOrderController::class, 'getPurchaseOrderLineShow'])->name('purchase.order.lines.show');
     Route::get('purchase-order-lines/{purchaseOrderLine}/edit', [PurhcaseOrderController::class, 'getPurchaseOrderLineEdit'])->name('purchase.order.lines.edit');
     Route::put('purchase-order-lines/{purchaseOrderLine}', [PurhcaseOrderController::class, 'getPurchaseOrderLineUpdate'])->name('purchase.order.lines.update');
     Route::any('purchase-order-lines/{purchaseOrderLine}/destroy', [PurhcaseOrderController::class, 'getPurchaseOrderLineDestroy'])->name('purchase.order.lines.destroy');
+    
+    
+    // Order
+    Route::get('orders', [OrderController::class, 'getOrderList'])->name('orders');
+    Route::get('orders/create', [OrderController::class, 'getOrderCreate'])->name('orders.create');
+    Route::post('orders/create', [OrderController::class, 'postOrderInsert'])->name('orders.insert');
+    Route::get('orders/{no_faktur}', [OrderController::class, 'getOrderShow'])->name('orders.show');
+    Route::get('orders/{no_faktur}/edit', [OrderController::class, 'getOrderEdit'])->name('orders.edit');
+    Route::put('orders/{no_faktur}', [OrderController::class, 'getOrderUpdate'])->name('orders.update');
+    Route::any('orders/{no_faktur}/destroy', [OrderController::class, 'getOrderDestroy'])->name('orders.destroy');
 });
 
 
