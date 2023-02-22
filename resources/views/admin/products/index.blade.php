@@ -24,19 +24,13 @@
                         <td>{{ $product->created_at }}</td>
                         <td>{{ $product->updated_at }}</td>
                         <td>
-                            <a class="btn btn-xs btn-primary" href="{{ route('admin.products.show', [$product->id]) }}"
-                                data-toggle="tooltip" data-placement="top"
-                                data-title="{{ __('views.admin.products.index.show') }}">
+                            <a class="btn btn-xs btn-primary" href="{{ route('admin.products.show', [$product->id]) }}" data-toggle="tooltip" data-placement="top" data-title="{{ __('views.admin.products.index.show') }}">
                                 <i class="fa fa-eye"></i>
                             </a>
-                            <a class="btn btn-xs btn-info" href="{{ route('admin.products.edit', [$product->id]) }}"
-                                data-toggle="tooltip" data-placement="top"
-                                data-title="{{ __('views.admin.products.index.edit') }}">
+                            <a class="btn btn-xs btn-info" href="{{ route('admin.products.edit', [$product->id]) }}" data-toggle="tooltip" data-placement="top" data-title="{{ __('views.admin.products.index.edit') }}">
                                 <i class="fa fa-pencil"></i>
                             </a>
-                            <a href="{{ route('admin.products.destroy', [$product->id]) }}"
-                                class="btn btn-xs btn-danger user_destroy" data-toggle="tooltip" data-placement="top"
-                                data-title="{{ __('views.admin.products.index.delete') }}">
+                            <a href="{{ route('admin.products.destroy', [$product->id]) }}" class="btn btn-xs btn-danger user_destroy" data-toggle="tooltip" data-placement="top" data-title="{{ __('views.admin.products.index.delete') }}">
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>

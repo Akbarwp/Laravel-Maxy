@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\PurhcaseOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,22 +70,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('dashboard/registration-chart', 'DashboardController@getRegistrationChartData')->name('dashboard.registration.chart');
 
     // Products
-    Route::get('products', 'PurhcaseOrderController@getProductList')->name('products');
-    Route::get('products/{id}', 'PurhcaseOrderController@getProductShow')->name('products.show');
-    Route::get('products/{id}/edit', 'PurhcaseOrderController@getProductEdit')->name('products.edit');
-    Route::put('products/{id}', 'PurhcaseOrderController@getProductUpdate')->name('products.update');
-    Route::any('products/{id}/destroy', 'PurhcaseOrderController@getProductDestroy')->name('products.destroy');
+    Route::get('products', [PurhcaseOrderController::class, 'getProductList'])->name('products');
+    Route::get('products/{id}', [PurhcaseOrderController::class, 'getProductShow'])->name('products.show');
+    Route::get('products/{id}/edit', [PurhcaseOrderController::class, 'getProductEdit'])->name('products.edit');
+    Route::put('products/{id}', [PurhcaseOrderController::class, 'getProductUpdate'])->name('products.update');
+    Route::any('products/{id}/destroy', [PurhcaseOrderController::class, 'getProductDestroy'])->name('products.destroy');
 
 
-    Route::get('purchase-order-lines', 'PurhcaseOrderController@getPurchaseOrderLineList')->name('purchase.order.lines');
+    Route::get('purchase-order-lines', [PurhcaseOrderController::class, 'getPurchaseOrderLineList'])->name('purchase.order.lines');
     
     // Purchase Order Lines
-    Route::get('purchase-order-lines/create', 'PurhcaseOrderController@getPurchaseOrderLineCreate')->name('purchase.order.lines.create');
-    Route::post('purchase-order-lines/create', 'PurhcaseOrderController@postPurchaseOrderLineInsert')->name('purchase.order.lines.insert');
-    Route::get('purchase-order-lines/{id}', 'PurhcaseOrderController@getPurchaseOrderLineShow')->name('purchase.order.lines.show');
-    Route::get('purchase-order-lines/{id}/edit', 'PurhcaseOrderController@getPurchaseOrderLineEdit')->name('purchase.order.lines.edit');
-    Route::put('purchase-order-lines/{id}', 'PurhcaseOrderController@getPurchaseOrderLineUpdate')->name('purchase.order.lines.update');
-    Route::any('purchase-order-lines/{id}/destroy', 'PurhcaseOrderController@getPurchaseOrderLineDestroy')->name('purchase.order.lines.destroy');
+    Route::get('purchase-order-lines/create', [PurhcaseOrderController::class, 'getPurchaseOrderLineCreate'])->name('purchase.order.lines.create');
+    Route::post('purchase-order-lines/create', [PurhcaseOrderController::class, 'postPurchaseOrderLineInsert'])->name('purchase.order.lines.insert');
+    Route::get('purchase-order-lines/{purchaseOrderLine}', [PurhcaseOrderController::class, 'getPurchaseOrderLineShow'])->name('purchase.order.lines.show');
+    Route::get('purchase-order-lines/{purchaseOrderLine}/edit', [PurhcaseOrderController::class, 'getPurchaseOrderLineEdit'])->name('purchase.order.lines.edit');
+    Route::put('purchase-order-lines/{purchaseOrderLine}', [PurhcaseOrderController::class, 'getPurchaseOrderLineUpdate'])->name('purchase.order.lines.update');
+    Route::any('purchase-order-lines/{purchaseOrderLine}/destroy', [PurhcaseOrderController::class, 'getPurchaseOrderLineDestroy'])->name('purchase.order.lines.destroy');
 });
 
 

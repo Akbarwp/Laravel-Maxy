@@ -83,23 +83,48 @@ class PurhcaseOrderController extends Controller
         return redirect()->intended(route('admin.purchase.order.lines'));
     }
 
-    public function getPurchaseOrderLineShow($id)
+    public function getPurchaseOrderLineShow(PurchaseOrderLine $purchaseOrderLine)
     {
-        return view();
+        return view('admin.purchaseOrderLines.show', [
+            'purhcaseOrderLine' => $purchaseOrderLine,
+        ]);
     }
 
-    public function getPurchaseOrderLineEdit($id)
+    public function getPurchaseOrderLineEdit(PurchaseOrderLine $purchaseOrderLine)
     {
-        return view();
+        return view('admin.purchaseOrderLines.edit', [
+            'purhcaseOrderLine' => $purchaseOrderLine,
+            'products' => Product::orderBy('id', 'asc')->get(),
+        ]);
     }
 
-    public function getPurchaseOrderLineUpdate($id)
+    public function getPurchaseOrderLineUpdate(Request $request, PurchaseOrderLine $purchaseOrderLine)
     {
-        return view();
+        $validator = Validator::make($request->all(), [
+            'product' => 'required',
+            'qty' => 'required',
+            'price' => 'required',
+            'discount' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
+        $purchaseOrderLine->product_id = $request->post('product');
+        $purchaseOrderLine->qty = $request->post('qty');
+        $purchaseOrderLine->price = $request->post('price');
+        $purchaseOrderLine->discount = $request->post('discount');
+        $purchaseOrderLine->total = ((int)$request->post('qty') * (int)$request->post('price')) - ((int)$request->post('discount') * (int)$request->post('price') / 100);
+
+        $purchaseOrderLine->save();
+
+        return redirect()->intended(route('admin.purchase.order.lines'));
     }
 
-    public function getPurchaseOrderLineDestroy($id)
+    public function getPurchaseOrderLineDestroy(PurchaseOrderLine $purchaseOrderLine)
     {
-        return view();
+        $purchaseOrderLine->delete();
+        return redirect()->intended(route('admin.purchase.order.lines'));
     }
 }
