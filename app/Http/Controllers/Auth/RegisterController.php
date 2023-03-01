@@ -26,6 +26,9 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
+    use RegistersUsers {
+        register as registration;
+    }
 
     /**
      * Where to redirect users after registration.
@@ -79,7 +82,8 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'confirmation_code' => Uuid::uuid4(),
-            'confirmed' => false
+            'confirmed' => false,
+            'google2fa_secret' => $data['google2fa_secret'],
         ]);
 
         if (config('auth.users.default_role')) {
@@ -99,12 +103,38 @@ class RegisterController extends Controller
     {
         $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create($request->all())));
+        // google2fa_secret
+        // Initialise the 2FA class
+        $google2fa = app('pragmarx.google2fa');
 
-        $this->guard()->login($user);
+        // Save the registration data in an array
+        $registration_data = $request->all();
 
-        return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());
+        // Add the secret key to the registration data
+        $registration_data["google2fa_secret"] = $google2fa->generateSecretKey();
+
+        // Save the registration data to the user session for just the next request
+        $request->session()->flash('registration_data', $registration_data);
+
+        // Generate the QR image. This is the image the user will scan with their app to set up two factor authentication
+        $QR_Image = $google2fa->getQRCodeInline(
+            config('app.name'),
+            $registration_data['email'],
+            $registration_data['google2fa_secret']
+        );
+
+        // Pass the QR barcode image to our view
+        return view('google2fa.register', [
+            'QR_Image' => $QR_Image,
+            'secret' => $registration_data['google2fa_secret'],
+        ]);
+
+
+        // event(new Registered($user = $this->create($request->all())));
+
+        // $this->guard()->login($user);
+
+        // return $this->registered($request, $user) ? : redirect($this->redirectPath());
     }
 
     /**
@@ -124,5 +154,23 @@ class RegisterController extends Controller
 
             return redirect(route('login'));
         }
+    }
+
+
+    // google2fa
+    public function completeRegistration(Request $request)
+    {        
+        // add the session data back to the request input
+        $request->merge(session('registration_data'));
+
+        event(new Registered($user = $this->create($request->all())));
+
+        $this->guard()->login($user);
+
+        // Call the default laravel authentication
+        return $this->registration($request);
+
+
+        // return $this->registered($request, $user) ? : redirect($this->redirectPath());
     }
 }

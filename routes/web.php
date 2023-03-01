@@ -1,7 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\admin\OrderController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\PurhcaseOrderController;
 
 /*
@@ -52,7 +55,7 @@ Route::group(['namespace' => 'Auth'], function () {
 /**
  * Backend routes
  */
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => 'admin'], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['admin', '2fa', 'auth']], function () {
 
     // Dashboard
     Route::get('/', 'DashboardController@index')->name('dashboard');
@@ -109,3 +112,14 @@ Route::group(['as' => 'protection.'], function () {
     Route::get('membership/access-denied', 'MembershipController@failed')->name('membership.failed');
     Route::get('membership/clear-cache/', 'MembershipController@clearValidationCache')->name('membership.clear_validation_cache');
 });
+
+
+Route::get('/2fa', function() {
+    return view('google2fa.index');
+})->name('2fa')->middleware('auth');
+
+Route::post('/2fa', function() {
+    return redirect('/admin');
+})->name('2fa')->middleware(['auth', '2fa']);
+
+Route::get('/complete-registration', [RegisterController::class, 'completeRegistration'])->name('complete-registration');
