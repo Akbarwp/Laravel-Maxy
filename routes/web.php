@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MembershipController;
@@ -99,6 +100,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('orders/{no_faktur}/edit', [OrderController::class, 'getOrderEdit'])->name('orders.edit');
     Route::put('orders/{no_faktur}', [OrderController::class, 'getOrderUpdate'])->name('orders.update');
     Route::any('orders/{no_faktur}/destroy', [OrderController::class, 'getOrderDestroy'])->name('orders.destroy');
+
+
+    // Reporting
+    Route::get('reporting', [DashboardController::class, 'getReportingPage'])->name('reporting');
+    Route::get('reporting/all-data-product', [DashboardController::class, 'getAllDataProduct'])->name('reporting.all.data.product');
+    Route::get('reporting/chart-product', [DashboardController::class, 'getChartProduct'])->name('reporting.chart.product');
 });
 
 

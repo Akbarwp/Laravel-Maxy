@@ -8,6 +8,7 @@ use Arcanedev\LogViewer\Entities\LogEntry;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Routing\Route;
 
 class DashboardController extends Controller
@@ -102,6 +103,47 @@ class DashboardController extends Controller
             'twitter' => User::whereHas('providers', function ($query) {
                 $query->where('provider', 'twitter');
             })->count(),
+        ];
+
+        return response($data);
+    }
+
+    public function getReportingPage()
+    {
+        return view('admin.reporting', [
+            'products' => Product::all(),
+        ]);
+    }
+
+    public function getAllDataProduct()
+    {
+        $product = Product::all();
+        for ($i = 0; $i < count($product); $i++) {
+            if ($product[$i]['price'] < 100000) {
+                $product[$i]['price_range'] = 'less_100000';
+
+            } else if ($product[$i]['price'] >= 100000 && $product[$i]['price'] <= 500000) {
+                $product[$i]['price_range'] = '_100000_500000';
+                
+            } else if ($product[$i]['price'] > 500000 && $product[$i]['price'] <= 1000000) {
+                $product[$i]['price_range'] = '_500001_1000000';
+                
+            } else if ($product[$i]['price'] > 1000000) {
+                $product[$i]['price_range'] = 'more_1000000';
+            }
+
+            $product[$i]['created_range'] = substr($product[$i]['created_at'], 0, 7);
+        }
+        return response($product);
+    }
+
+    public function getChartProduct()
+    {
+        $data = [
+            "less_100000" => Product::where('price', '<', 100000)->count(),
+            "_100000_500000" => Product::where('price', '>=', 100000)->where('price', '<=', 500000)->count(),
+            "_500001_1000000" => Product::where('price', '>', 500000)->where('price', '<=', 1000000)->count(),
+            "more_1000000" => Product::where('price', '>', 1000000)->count(),
         ];
 
         return response($data);
